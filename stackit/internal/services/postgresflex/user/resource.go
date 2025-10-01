@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	postgresflexUtils "github.com/stackitcloud/terraform-provider-stackit/stackit/internal/services/postgresflex/utils"
@@ -24,9 +25,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/sohel2020/stackit-sdk-go/services/postgresflex"
+	"github.com/sohel2020/stackit-sdk-go/services/postgresflex/wait"
 	"github.com/stackitcloud/stackit-sdk-go/core/oapierror"
-	"github.com/stackitcloud/stackit-sdk-go/services/postgresflex"
-	"github.com/stackitcloud/stackit-sdk-go/services/postgresflex/wait"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -115,7 +116,7 @@ func (r *userResource) Configure(ctx context.Context, req resource.ConfigureRequ
 
 // Schema defines the schema for the resource.
 func (r *userResource) Schema(_ context.Context, _ resource.SchemaRequest, resp *resource.SchemaResponse) {
-	rolesOptions := []string{"login", "createdb"}
+	rolesOptions := []string{"login", "createdb", "createrole"}
 
 	descriptions := map[string]string{
 		"main":        "Postgres Flex user resource schema. Must have a `region` specified in the provider configuration.",
@@ -183,7 +184,7 @@ func (r *userResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 				Required:    true,
 				Validators: []validator.Set{
 					setvalidator.ValueStringsAre(
-						stringvalidator.OneOf("login", "createdb"),
+						stringvalidator.OneOf("login", "createdb", "createrole"),
 					),
 				},
 			},
@@ -487,19 +488,19 @@ func mapFieldsCreate(userResp *postgresflex.CreateUserResponse, model *Model, re
 }
 
 func mapFields(userResp *postgresflex.GetUserResponse, model *Model, region string) error {
-	if userResp == nil || userResp.Item == nil {
+	if userResp == nil {
 		return fmt.Errorf("response is nil")
 	}
 	if model == nil {
 		return fmt.Errorf("model input is nil")
 	}
-	user := userResp.Item
+	user := userResp
 
 	var userId string
 	if model.UserId.ValueString() != "" {
 		userId = model.UserId.ValueString()
 	} else if user.Id != nil {
-		userId = *user.Id
+		userId = strconv.Itoa(*user.Id)
 	} else {
 		return fmt.Errorf("user id not present")
 	}
@@ -551,6 +552,7 @@ func toUpdatePayload(model *Model, roles []string) (*postgresflex.UpdateUserPayl
 	}
 
 	return &postgresflex.UpdateUserPayload{
-		Roles: &roles,
+		Roles:    &roles,
+		Username: conversion.StringValueToPointer(model.Username),
 	}, nil
 }

@@ -11,9 +11,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/stackitcloud/stackit-sdk-go/core/utils"
 
+	"github.com/sohel2020/stackit-sdk-go/services/postgresflex"
+	"github.com/sohel2020/stackit-sdk-go/services/postgresflex/wait"
 	"github.com/stackitcloud/stackit-sdk-go/core/config"
-	"github.com/stackitcloud/stackit-sdk-go/services/postgresflex"
-	"github.com/stackitcloud/stackit-sdk-go/services/postgresflex/wait"
 	"github.com/stackitcloud/terraform-provider-stackit/stackit/internal/core"
 	"github.com/stackitcloud/terraform-provider-stackit/stackit/internal/testutil"
 )

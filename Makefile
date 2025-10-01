@@ -25,7 +25,7 @@ generate-docs:
 	@$(SCRIPTS_BASE)/tfplugindocs.sh
 
 build:
-	@go build -o bin/terraform-provider-stackit
+	@go build -o bin/terraform-provider-stackit_v1.0.0 && mv bin/terraform-provider-stackit_v1.0.0 ~/stackit-provider-test/.terraform/plugins/registry.terraform.io/stackitcloud/stackit/1.0.0/darwin_arm64/
 
 fmt:
 	@gofmt -s -w .

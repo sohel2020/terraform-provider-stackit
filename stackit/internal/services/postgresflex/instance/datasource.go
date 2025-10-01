@@ -18,8 +18,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/stackitcloud/stackit-sdk-go/services/postgresflex"
-	"github.com/stackitcloud/stackit-sdk-go/services/postgresflex/wait"
+	"github.com/sohel2020/stackit-sdk-go/services/postgresflex"
+	"github.com/sohel2020/stackit-sdk-go/services/postgresflex/wait"
 )
 
 // Ensure the implementation satisfies the expected interfaces.

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/stackitcloud/terraform-provider-stackit/stackit/internal/conversion"
 	postgresflexUtils "github.com/stackitcloud/terraform-provider-stackit/stackit/internal/services/postgresflex/utils"
@@ -18,7 +19,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/stackitcloud/stackit-sdk-go/services/postgresflex"
+	"github.com/sohel2020/stackit-sdk-go/services/postgresflex"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -183,19 +184,19 @@ func (r *userDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 }
 
 func mapDataSourceFields(userResp *postgresflex.GetUserResponse, model *DataSourceModel, region string) error {
-	if userResp == nil || userResp.Item == nil {
+	if userResp == nil {
 		return fmt.Errorf("response is nil")
 	}
 	if model == nil {
 		return fmt.Errorf("model input is nil")
 	}
-	user := userResp.Item
+	user := userResp
 
 	var userId string
 	if model.UserId.ValueString() != "" {
 		userId = model.UserId.ValueString()
 	} else if user.Id != nil {
-		userId = *user.Id
+		userId = strconv.Itoa(*user.Id)
 	} else {
 		return fmt.Errorf("user id not present")
 	}

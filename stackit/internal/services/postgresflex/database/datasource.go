@@ -16,7 +16,7 @@ import (
 	"github.com/stackitcloud/terraform-provider-stackit/stackit/internal/validate"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/stackitcloud/stackit-sdk-go/services/postgresflex"
+	"github.com/sohel2020/stackit-sdk-go/services/postgresflex"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
